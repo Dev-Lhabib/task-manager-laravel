@@ -2,24 +2,60 @@
 
 namespace Database\Seeders;
 
-use App\Models\User;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Hash;
+use App\Models\User;
+use App\Models\Category;
+use App\Models\Task;
 
 class DatabaseSeeder extends Seeder
 {
-    use WithoutModelEvents;
-
-    /**
-     * Seed the application's database.
-     */
     public function run(): void
     {
-        // User::factory(10)->create();
+        // 4 catégories
+        $categories = [
+            'Développement',
+            'Design',
+            'Marketing',
+            'DevOps',
+        ];
 
-        User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
+        foreach ($categories as $name) {
+            Category::create(['name' => $name]);
+        }
+
+        // 2 utilisateurs
+        $alice = User::create([
+            'name'     => 'Alice Martin',
+            'email'    => 'alice@example.com',
+            'password' => Hash::make('password'),
         ]);
+
+        $bob = User::create([
+            'name'     => 'Bob Dupont',
+            'email'    => 'bob@example.com',
+            'password' => Hash::make('password'),
+        ]);
+
+        // 10 tâches — 6 pour Alice, 4 pour Bob
+        $tasks = [
+            // Alice
+            ['title' => 'Créer la page d\'accueil', 'description' => 'Design et intégration HTML/CSS', 'status' => 'done',        'category_id' => 1, 'user_id' => $alice->id],
+            ['title' => 'Configurer Laravel Telescope', 'description' => 'Installation et configuration', 'status' => 'done',      'category_id' => 4, 'user_id' => $alice->id],
+            ['title' => 'Implémenter l\'authentification', 'description' => 'Login, register, logout avec Breeze', 'status' => 'in_progress', 'category_id' => 1, 'user_id' => $alice->id],
+            ['title' => 'Créer les migrations', 'description' => 'Tables categories et tasks', 'status' => 'in_progress',         'category_id' => 1, 'user_id' => $alice->id],
+            ['title' => 'Rédiger le README', 'description' => 'Instructions d\'installation complètes', 'status' => 'todo',        'category_id' => 3, 'user_id' => $alice->id],
+            ['title' => 'Déployer en production', 'description' => 'Configuration serveur et CI/CD', 'status' => 'todo',           'category_id' => 4, 'user_id' => $alice->id],
+
+            // Bob
+            ['title' => 'Créer le logo', 'description' => 'Logo SVG responsive', 'status' => 'done',                             'category_id' => 2, 'user_id' => $bob->id],
+            ['title' => 'Campagne emailing', 'description' => 'Newsletter Q2 2025', 'status' => 'in_progress',                    'category_id' => 3, 'user_id' => $bob->id],
+            ['title' => 'Optimiser les requêtes SQL', 'description' => 'Corriger les N+1 détectés avec Debugbar', 'status' => 'todo', 'category_id' => 1, 'user_id' => $bob->id],
+            ['title' => 'Intégrer les maquettes', 'description' => 'Passage des maquettes Figma en Blade', 'status' => 'todo',    'category_id' => 2, 'user_id' => $bob->id],
+        ];
+
+        foreach ($tasks as $task) {
+            Task::create($task);
+        }
     }
 }
