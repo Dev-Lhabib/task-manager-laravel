@@ -25,6 +25,18 @@ class TaskController extends Controller
         return view('tasks.index', compact('tasks', 'categories'));
     }
 
+    public function all(Request $request)
+    {
+        $tasks = Task::with(['category', 'user'])
+            ->when($request->status, fn($q, $v) => $q->where('status', $v))
+            ->when($request->category, fn($q, $v) => $q->where('category_id', $v))
+            ->latest()
+            ->get();
+
+        $categories = Category::all();
+        return view('tasks.all', compact('tasks', 'categories'));
+    }
+
     public function create()
     {
         $categories = Category::all();
