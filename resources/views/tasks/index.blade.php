@@ -3,50 +3,35 @@
 @section('title', 'Mes tâches')
 
 @section('styles')
-<style>
-    .page-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:1.5rem; }
-    .page-header h1 { font-size:1.5rem; color:#1a1a2e; }
-    .btn-primary { background:#185FA5; color:#fff; padding:8px 16px; border-radius:6px; text-decoration:none; font-size:.9rem; border:none; cursor:pointer; }
-    .btn-primary:hover { background:#0C447C; }
-    .filters { display:flex; gap:10px; flex-wrap:wrap; margin-bottom:1.5rem; background:#fff; padding:14px 16px; border-radius:10px; box-shadow:0 1px 4px rgba(0,0,0,.06); }
-    .filters select { padding:6px 10px; border:1px solid #ccc; border-radius:6px; font-size:.9rem; }
-    .filters button { background:#185FA5; color:#fff; border:none; padding:6px 14px; border-radius:6px; cursor:pointer; font-size:.9rem; }
-    .filters a { padding:6px 14px; border:1px solid #ccc; border-radius:6px; font-size:.9rem; text-decoration:none; color:#444; }
-    .task-table { width:100%; border-collapse:collapse; background:#fff; border-radius:10px; overflow:hidden; box-shadow:0 1px 4px rgba(0,0,0,.06); }
-    .task-table th { background:#1a1a2e; color:#fff; padding:10px 14px; text-align:left; font-size:.85rem; }
-    .task-table td { padding:10px 14px; border-bottom:1px solid #f0f0f0; font-size:.9rem; vertical-align:middle; }
-    .task-table tr:last-child td { border-bottom:none; }
-    .task-table tr:hover td { background:#fafafa; }
-    .badge { font-size:.75rem; padding:3px 8px; border-radius:10px; font-weight:600; }
-    .badge-todo { background:#E6F1FB; color:#0C447C; }
-    .badge-in_progress { background:#FAEEDA; color:#633806; }
-    .badge-done { background:#EAF3DE; color:#27500A; }
-    .actions { display:flex; gap:6px; align-items:center; flex-wrap:wrap; }
-    .btn-edit { font-size:.8rem; padding:4px 10px; border-radius:5px; background:#f0f0f0; color:#333; text-decoration:none; border:1px solid #ddd; }
-    .btn-delete { font-size:.8rem; padding:4px 10px; border-radius:5px; background:#FCEBEB; color:#791F1F; border:1px solid #f5c6c6; cursor:pointer; }
-    .status-form select { font-size:.8rem; padding:3px 6px; border:1px solid #ccc; border-radius:5px; }
-    .status-form button { font-size:.8rem; padding:3px 8px; background:#0F6E56; color:#fff; border:none; border-radius:5px; cursor:pointer; }
-    .empty { text-align:center; padding:3rem; color:#888; }
-</style>
+<link rel="stylesheet" href="{{ asset('css/tasks.css') }}">
 @endsection
 
 @section('content')
 
-<div class="page-header">
-    <h1>✅ Mes tâches</h1>
-    <a href="{{ route('tasks.create') }}" class="btn-primary">+ Nouvelle tâche</a>
+<div class="page-header animate-fadeup">
+    <h1>
+        <svg width="24" height="24" fill="none" stroke="var(--accent)" stroke-width="2" viewBox="0 0 24 24"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/><path d="m9 14 2 2 4-4"/></svg>
+        Mes tâches
+        <span class="task-count">{{ $tasks->count() }}</span>
+    </h1>
+    <a href="{{ route('tasks.create') }}" class="btn btn-accent">
+        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 8v8m-4-4h8"/></svg>
+        Nouvelle tâche
+    </a>
 </div>
 
-{{-- FILTRES --}}
-<form method="GET" action="{{ route('tasks.index') }}" class="filters">
-    <select name="status">
+{{-- Filters --}}
+<form method="GET" action="{{ route('tasks.index') }}" class="glass-card filters animate-fadeup animate-fadeup-1">
+    <svg width="18" height="18" fill="none" stroke="var(--text-muted)" stroke-width="2" viewBox="0 0 24 24"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>
+    <select name="status" class="filter-select">
         <option value="">Tous les statuts</option>
         <option value="todo"        {{ request('status') == 'todo'        ? 'selected' : '' }}>À faire</option>
         <option value="in_progress" {{ request('status') == 'in_progress' ? 'selected' : '' }}>En cours</option>
+        <option value="in_review"   {{ request('status') == 'in_review'   ? 'selected' : '' }}>En révision</option>
         <option value="done"        {{ request('status') == 'done'        ? 'selected' : '' }}>Terminé</option>
     </select>
 
-    <select name="category">
+    <select name="category" class="filter-select">
         <option value="">Toutes les catégories</option>
         @foreach($categories as $cat)
             <option value="{{ $cat->id }}" {{ request('category') == $cat->id ? 'selected' : '' }}>
@@ -55,73 +40,72 @@
         @endforeach
     </select>
 
-    <button type="submit">Filtrer</button>
-    <a href="{{ route('tasks.index') }}">Réinitialiser</a>
+    <button type="submit" class="filter-btn">Filtrer</button>
+    <a href="{{ route('tasks.index') }}" class="filter-reset">Réinitialiser</a>
 </form>
 
-{{-- TABLEAU --}}
+{{-- Task List --}}
 @if($tasks->isEmpty())
-    <div class="empty">
-        <p>Aucune tâche trouvée.</p>
-        <a href="{{ route('tasks.create') }}" class="btn-primary" style="display:inline-block;margin-top:1rem">Créer ma première tâche</a>
+    <div class="glass-card empty-state">
+        <div class="empty-icon">📋</div>
+        <h3>Aucune tâche trouvée</h3>
+        <p>Commencez par créer votre première tâche pour organiser votre travail.</p>
+        <a href="{{ route('tasks.create') }}" class="btn btn-accent">
+            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 8v8m-4-4h8"/></svg>
+            Créer ma première tâche
+        </a>
     </div>
 @else
-    <table class="task-table">
-        <thead>
-            <tr>
-                <th>Titre</th>
-                <th>Catégorie</th>
-                <th>Statut</th>
-                <th>Créée le</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach($tasks as $task)
-            <tr>
-                <td>{{ $task->title }}</td>
-                <td>{{ $task->category->name }}</td>
-                <td>
-                    <span class="badge badge-{{ $task->status }}">
-                        @if($task->status == 'todo') À faire
-                        @elseif($task->status == 'in_progress') En cours
-                        @else Terminé
-                        @endif
-                    </span>
-                </td>
-                <td>{{ $task->created_at->format('d/m/Y') }}</td>
-                <td>
-                    <div class="actions">
-                        {{-- Edit --}}
-                        <a href="{{ route('tasks.edit', $task) }}" class="btn-edit">✏️ Modifier</a>
+    <div class="task-list">
+        @foreach($tasks as $i => $task)
+        <div class="glass-card task-card animate-fadeup"
+        style="--delay: {{ min($i * 0.05, 0.3) }}s">
+            <div class="task-status-dot td-{{ $task->status }}"></div>
+            <div class="task-main">
+                <div class="task-title">{{ $task->title }}</div>
+                <div class="task-subtitle">
+                    <span>{{ $task->category->name }}</span>
+                    <span class="sep">·</span>
+                    <span>{{ $task->created_at->format('d/m/Y') }}</span>
+                </div>
+            </div>
+            <span class="badge badge-{{ $task->status }}">
+                @if($task->status == 'todo') À faire
+                @elseif($task->status == 'in_progress') En cours
+                @elseif($task->status == 'in_review') En révision
+                @else Terminé
+                @endif
+            </span>
+            <div class="task-actions">
+                <a href="{{ route('tasks.edit', $task) }}" class="action-btn">
+                    <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                    Modifier
+                </a>
 
-                        {{-- US7 — Statut rapide --}}
-                        <form method="POST" action="{{ route('tasks.updateStatus', $task) }}" class="status-form">
-                            @csrf
-                            @method('PATCH')
-                            <select name="status">
-                                <option value="todo"        {{ $task->status == 'todo'        ? 'selected' : '' }}>À faire</option>
-                                <option value="in_progress" {{ $task->status == 'in_progress' ? 'selected' : '' }}>En cours</option>
-                                <option value="done"        {{ $task->status == 'done'        ? 'selected' : '' }}>Terminé</option>
-                            </select>
-                            <button type="submit">✓</button>
-                        </form>
+                <form method="POST" action="{{ route('tasks.updateStatus', $task) }}" class="status-mini">
+                    @csrf
+                    @method('PATCH')
+                    <select name="status">
+                        <option value="todo"        {{ $task->status == 'todo'        ? 'selected' : '' }}>À faire</option>
+                        <option value="in_progress" {{ $task->status == 'in_progress' ? 'selected' : '' }}>En cours</option>
+                        <option value="in_review"   {{ $task->status == 'in_review'   ? 'selected' : '' }}>En révision</option>
+                        <option value="done"        {{ $task->status == 'done'        ? 'selected' : '' }}>Terminé</option>
+                    </select>
+                    <button type="submit" title="Mettre à jour">✓</button>
+                </form>
 
-                        {{-- Delete --}}
-                        <form method="POST" action="{{ route('tasks.destroy', $task) }}">
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit" class="btn-delete"
-                                onclick="return confirm('Supprimer cette tâche ?')">
-                                🗑️ Supprimer
-                            </button>
-                        </form>
-                    </div>
-                </td>
-            </tr>
-            @endforeach
-        </tbody>
-    </table>
+                <form method="POST" action="{{ route('tasks.destroy', $task) }}">
+                    @csrf
+                    @method('DELETE')
+                    <button type="submit" class="action-btn delete-btn"
+                        onclick="return confirm('Supprimer cette tâche ?')">
+                        <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2m3 0v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6h14z"/></svg>
+                    </button>
+                </form>
+            </div>
+        </div>
+        @endforeach
+    </div>
 @endif
 
 @endsection

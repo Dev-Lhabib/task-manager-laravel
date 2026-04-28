@@ -3,61 +3,65 @@
 @section('title', 'Nouvelle tâche')
 
 @section('styles')
-<style>
-    .form-card { max-width:600px; margin:0 auto; background:#fff; padding:2rem; border-radius:10px; box-shadow:0 1px 4px rgba(0,0,0,.06); }
-    .form-card h1 { font-size:1.3rem; margin-bottom:1.5rem; color:#1a1a2e; }
-    .form-group { margin-bottom:1.1rem; }
-    .form-group label { display:block; font-size:.9rem; margin-bottom:4px; color:#444; font-weight:500; }
-    .form-group input, .form-group textarea, .form-group select { width:100%; padding:8px 12px; border:1px solid #ccc; border-radius:6px; font-size:.95rem; font-family:inherit; }
-    .form-group input:focus, .form-group textarea:focus, .form-group select:focus { outline:none; border-color:#185FA5; }
-    .form-group textarea { height:120px; resize:vertical; }
-    .form-actions { display:flex; gap:10px; margin-top:1.5rem; }
-    .btn-primary { background:#185FA5; color:#fff; border:none; padding:10px 20px; border-radius:6px; font-size:.95rem; cursor:pointer; }
-    .btn-secondary { background:#f0f0f0; color:#333; border:1px solid #ddd; padding:10px 20px; border-radius:6px; font-size:.95rem; text-decoration:none; }
-</style>
+<link rel="stylesheet" href="{{ asset('css/tasks.css') }}">
 @endsection
 
 @section('content')
-<div class="form-card">
-    <h1>➕ Nouvelle tâche</h1>
 
+<div class="form-hero create-hero animate-fadeup">
+    <h1>
+        <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 8v8m-4-4h8"/></svg>
+        Nouvelle tâche
+    </h1>
+    <p>Remplissez les informations ci-dessous pour créer une nouvelle tâche.</p>
+</div>
+
+<div class="glass-card form-card animate-fadeup animate-fadeup-1">
     <form method="POST" action="{{ route('tasks.store') }}">
         @csrf
 
         <div class="form-group">
-            <label for="title">Titre *</label>
-            <input type="text" id="title" name="title" value="{{ old('title') }}" required autofocus>
+            <label for="title" class="form-label">Titre *</label>
+            <input type="text" id="title" name="title" class="form-input"
+                value="{{ old('title') }}" required autofocus placeholder="Ex: Finaliser le rapport...">
         </div>
 
         <div class="form-group">
-            <label for="description">Description</label>
-            <textarea id="description" name="description">{{ old('description') }}</textarea>
+            <label for="description" class="form-label">Description</label>
+            <textarea id="description" name="description" class="form-textarea"
+                placeholder="Décrivez votre tâche en détail...">{{ old('description') }}</textarea>
         </div>
 
-        <div class="form-group">
-            <label for="category_id">Catégorie *</label>
-            <select id="category_id" name="category_id" required>
-                <option value="">-- Choisir une catégorie --</option>
-                @foreach($categories as $cat)
-                    <option value="{{ $cat->id }}" {{ old('category_id') == $cat->id ? 'selected' : '' }}>
-                        {{ $cat->name }}
-                    </option>
-                @endforeach
-            </select>
-        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
+            <div class="form-group" style="margin-bottom:0;">
+                <label for="category_id" class="form-label">Catégorie *</label>
+                <select id="category_id" name="category_id" class="form-select" required>
+                    <option value="">— Choisir —</option>
+                    @foreach($categories as $cat)
+                        <option value="{{ $cat->id }}" {{ old('category_id') == $cat->id ? 'selected' : '' }}>
+                            {{ $cat->name }}
+                        </option>
+                    @endforeach
+                </select>
+            </div>
 
-        <div class="form-group">
-            <label for="status">Statut</label>
-            <select id="status" name="status">
-                <option value="todo"        {{ old('status') == 'todo'        ? 'selected' : '' }}>À faire</option>
-                <option value="in_progress" {{ old('status') == 'in_progress' ? 'selected' : '' }}>En cours</option>
-                <option value="done"        {{ old('status') == 'done'        ? 'selected' : '' }}>Terminé</option>
-            </select>
+            <div class="form-group" style="margin-bottom:0;">
+                <label for="status" class="form-label">Statut</label>
+                <select id="status" name="status" class="form-select">
+                    <option value="todo"        {{ old('status') == 'todo'        ? 'selected' : '' }}>À faire</option>
+                    <option value="in_progress" {{ old('status') == 'in_progress' ? 'selected' : '' }}>En cours</option>
+                    <option value="in_review"   {{ old('status') == 'in_review'   ? 'selected' : '' }}>En révision</option>
+                    <option value="done"        {{ old('status') == 'done'        ? 'selected' : '' }}>Terminé</option>
+                </select>
+            </div>
         </div>
 
         <div class="form-actions">
-            <button type="submit" class="btn-primary">Créer la tâche</button>
-            <a href="{{ route('tasks.index') }}" class="btn-secondary">Annuler</a>
+            <button type="submit" class="btn btn-accent">
+                <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="m9 12 2 2 4-4"/></svg>
+                Créer la tâche
+            </button>
+            <a href="{{ route('tasks.index') }}" class="btn-cancel">Annuler</a>
         </div>
     </form>
 </div>
