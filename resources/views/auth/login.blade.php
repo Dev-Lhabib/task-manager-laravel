@@ -1,44 +1,59 @@
-@extends('layouts.app')
-
-@section('title', 'Connexion')
-
-@section('styles')
-<style>
-    .auth-card { max-width: 420px; margin: 3rem auto; background: #fff; padding: 2rem; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,.08); }
-    .auth-card h1 { font-size: 1.4rem; margin-bottom: 1.5rem; color: #185FA5; }
-    .form-group { margin-bottom: 1rem; }
-    .form-group label { display: block; font-size: .9rem; margin-bottom: 4px; color: #444; }
-    .form-group input { width: 100%; padding: 8px 12px; border: 1px solid #ccc; border-radius: 6px; font-size: .95rem; }
-    .form-group input:focus { outline: none; border-color: #185FA5; }
-    .btn-primary { width: 100%; background: #185FA5; color: #fff; border: none; padding: 10px; border-radius: 6px; font-size: 1rem; cursor: pointer; margin-top: .5rem; }
-    .btn-primary:hover { background: #0C447C; }
-    .auth-footer { text-align: center; margin-top: 1rem; font-size: .9rem; color: #666; }
-    .auth-footer a { color: #185FA5; }
-</style>
-@endsection
-
-@section('content')
-<div class="auth-card">
-    <h1>🔐 Connexion</h1>
-
-    <form method="POST" action="{{ route('login') }}">
-        @csrf
-
-        <div class="form-group">
-            <label for="email">Email</label>
-            <input type="email" id="email" name="email" value="{{ old('email') }}" required autofocus>
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TaskFlow — Connexion</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ asset('css/auth.css') }}">
+</head>
+<body>
+    <div class="auth-container">
+        <div class="auth-brand">
+            <div class="auth-brand-icon">✦</div>
+            <div class="auth-brand-title">TaskFlow</div>
+            <div class="auth-brand-sub">Gérez vos tâches efficacement</div>
         </div>
 
-        <div class="form-group">
-            <label for="password">Mot de passe</label>
-            <input type="password" id="password" name="password" required>
+        <div class="auth-card">
+            <h1>🔐 Connexion</h1>
+
+            @if($errors->any())
+                <div class="alert-error">
+                    <ul>
+                        @foreach($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
+
+            <form method="POST" action="{{ route('login') }}">
+                @csrf
+
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" name="email" value="{{ old('email') }}" required autofocus>
+                </div>
+
+                <div class="form-group">
+                    <label for="password">Mot de passe</label>
+                    <input type="password" id="password" name="password" required>
+                </div>
+
+                <div class="form-options">
+                    <a href="{{ route('password.request') }}" class="forgot-link">Mot de passe oublié ?</a>
+                </div>
+
+                <button type="submit" class="btn-submit">Se connecter</button>
+            </form>
+
+            <div class="auth-footer">
+                Pas encore de compte ? <a href="{{ route('register') }}">S'inscrire</a>
+            </div>
         </div>
-
-        <button type="submit" class="btn-primary">Se connecter</button>
-    </form>
-
-    <div class="auth-footer">
-        Pas encore de compte ? <a href="{{ route('register') }}">S'inscrire</a>
     </div>
-</div>
-@endsection
+</body>
+</html>

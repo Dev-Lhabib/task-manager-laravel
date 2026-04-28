@@ -3,62 +3,124 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>Task Manager — @yield('title', 'Mes tâches')</title>
-    <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-        body { font-family: Arial, sans-serif; background: #f5f5f5; color: #1a1a1a; }
-        nav { background: #185FA5; padding: 1rem 2rem; display: flex; align-items: center; justify-content: space-between; }
-        nav .brand { color: #fff; font-size: 1.2rem; font-weight: 700; text-decoration: none; }
-        nav .nav-links { display: flex; gap: 1rem; align-items: center; }
-        nav a { color: #fff; text-decoration: none; font-size: 0.9rem; }
-        nav a:hover { text-decoration: underline; }
-        nav form button { background: none; border: 1px solid #fff; color: #fff; padding: 4px 12px; border-radius: 4px; cursor: pointer; font-size: 0.9rem; }
-        .container { max-width: 960px; margin: 2rem auto; padding: 0 1rem; }
-        .alert-success { background: #d4edda; color: #155724; padding: 10px 16px; border-radius: 6px; margin-bottom: 1rem; }
-        .alert-error { background: #f8d7da; color: #721c24; padding: 10px 16px; border-radius: 6px; margin-bottom: 1rem; }
-    </style>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ asset('css/app.css') }}">
     @yield('styles')
 </head>
 <body>
 
-<nav>
-    <a href="{{ route('tasks.index') }}" class="brand">✅ Task Manager</a>
-    <div class="nav-links">
-        @auth
-            <span style="color:#fff;font-size:.9rem">{{ auth()->user()->name }}</span>
-            <a href="{{ route('tasks.index') }}">Mes tâches</a>
-            <a href="{{ route('tasks.create') }}">+ Nouvelle tâche</a>
-            <form method="POST" action="{{ route('logout') }}">
-                @csrf
-                <button type="submit">Déconnexion</button>
-            </form>
-        @endauth
+<!-- Mobile Overlay -->
+<div class="mobile-overlay" id="mobileOverlay" onclick="toggleSidebar()"></div>
 
-        @guest
-            <a href="{{ route('login') }}">Connexion</a>
-            <a href="{{ route('register') }}">Inscription</a>
-        @endguest
-    </div>
-</nav>
-
-<div class="container">
-    @if(session('success'))
-        <div class="alert-success">{{ session('success') }}</div>
-    @endif
-
-    @if($errors->any())
-        <div class="alert-error">
-            <ul style="list-style:none">
-                @foreach($errors->all() as $error)
-                    <li>{{ $error }}</li>
-                @endforeach
-            </ul>
+<!-- Sidebar -->
+<aside class="sidebar" id="sidebar">
+    <a href="{{ route('dashboard') }}" class="sidebar-brand">
+        <div class="brand-icon">✦</div>
+        <div>
+            <div class="brand-text">TaskFlow</div>
+            <div class="brand-sub">Manager Pro</div>
         </div>
-    @endif
+    </a>
 
-    @yield('content')
+    <div class="sidebar-section">
+        <div class="sidebar-label">Menu principal</div>
+        <a href="{{ route('dashboard') }}" class="nav-item {{ request()->routeIs('dashboard') ? 'active' : '' }}">
+            <span class="nav-icon">
+                <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>
+            </span>
+            Dashboard
+        </a>
+        <a href="{{ route('tasks.index') }}" class="nav-item {{ request()->routeIs('tasks.index') ? 'active' : '' }}">
+            <span class="nav-icon">
+                <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/><path d="m9 14 2 2 4-4"/></svg>
+            </span>
+            Mes tâches
+            @auth
+                @php Auth::user()->loadCount('tasks'); @endphp
+                @if(Auth::user()->tasks_count > 0)
+                    <span class="nav-badge">{{ Auth::user()->tasks_count }}</span>
+                @endif
+            @endauth
+        </a>
+        <a href="{{ route('tasks.create') }}" class="nav-item {{ request()->routeIs('tasks.create') ? 'active' : '' }}">
+            <span class="nav-icon">
+                <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 8v8m-4-4h8"/></svg>
+            </span>
+            Nouvelle tâche
+        </a>
+    </div>
+
+    <div class="sidebar-section">
+        <div class="sidebar-label">Compte</div>
+        <a href="{{ route('profile.edit') }}" class="nav-item {{ request()->routeIs('profile.edit') ? 'active' : '' }}">
+            <span class="nav-icon">
+                <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M5.5 21a7.5 7.5 0 0 1 13 0"/></svg>
+            </span>
+            Mon profil
+        </a>
+    </div>
+
+    <div class="sidebar-spacer"></div>
+
+    @auth
+    <div class="sidebar-user">
+        <div class="sidebar-avatar">
+            {{ strtoupper(substr(Auth::user()->name, 0, 2)) }}
+        </div>
+        <div class="sidebar-user-info">
+            <div class="sidebar-user-name">{{ Auth::user()->name }}</div>
+            <div class="sidebar-user-email">{{ Auth::user()->email }}</div>
+        </div>
+        <form method="POST" action="{{ route('logout') }}" style="margin:0">
+            @csrf
+            <button type="submit" class="sidebar-logout" title="Déconnexion">
+                <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+            </button>
+        </form>
+    </div>
+    @endauth
+</aside>
+
+<!-- Main Content -->
+<div class="main-content">
+    <header class="topbar">
+        <div style="display:flex;align-items:center;gap:12px;">
+            <button class="mobile-toggle" onclick="toggleSidebar()">☰</button>
+            <h1 class="topbar-title">@yield('title', 'Mes tâches')</h1>
+        </div>
+        <div class="topbar-right">
+            <span class="topbar-date">{{ now()->translatedFormat('l d F Y') }}</span>
+        </div>
+    </header>
+
+    <div class="page-container">
+        @if(session('success'))
+            <div class="alert alert-success">
+                <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="m9 12 2 2 4-4"/></svg>
+                {{ session('success') }}
+            </div>
+        @endif
+
+        @if($errors->any())
+            <div class="alert alert-error">
+                <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 8v4m0 4h.01"/></svg>
+                <ul>
+                    @foreach($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
+
+        @yield('content')
+    </div>
 </div>
 
+<script src="{{ asset('js/app.js') }}"></script>
 @yield('scripts')
 </body>
 </html>
