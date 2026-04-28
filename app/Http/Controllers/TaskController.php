@@ -37,7 +37,7 @@ class TaskController extends Controller
             'title'       => 'required|string|max:255',
             'description' => 'nullable|string',
             'category_id' => 'required|exists:categories,id',
-            'status'      => 'in:todo,in_progress,done',
+            'status'      => 'in:todo,in_progress,in_review,done',
         ]);
 
         $data['user_id'] = Auth::id(); // ← plus de warning
@@ -65,7 +65,7 @@ class TaskController extends Controller
             'title'       => 'required|string|max:255',
             'description' => 'nullable|string',
             'category_id' => 'required|exists:categories,id',
-            'status'      => 'required|in:todo,in_progress,done',
+            'status'      => 'required|in:todo,in_progress,in_review,done',
         ]);
 
         $task->update($data);
@@ -89,7 +89,7 @@ class TaskController extends Controller
         if ($task->user_id !== Auth::id()) abort(403);
 
         $request->validate([
-            'status' => 'required|in:todo,in_progress,done',
+            'status' => 'required|in:todo,in_progress,in_review,done',
         ]);
 
         $task->update(['status' => $request->status]);
