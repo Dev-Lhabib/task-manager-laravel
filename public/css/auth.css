@@ -1,0 +1,57 @@
+/* AUTH PAGES — Login, Register, Forgot Password */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    min-height: 100vh; display: flex; align-items: center; justify-content: center;
+    background: #0f172a; color: #0f172a; -webkit-font-smoothing: antialiased;
+    position: relative; overflow-x: hidden;
+}
+body.auth-register { padding: 2rem 0; }
+body::before {
+    content: ''; position: fixed; top: -20%; left: -10%; width: 600px; height: 600px;
+    background: radial-gradient(circle, rgba(99,102,241,.25) 0%, transparent 70%);
+    border-radius: 50%; animation: float1 8s ease-in-out infinite; pointer-events: none;
+}
+body::after {
+    content: ''; position: fixed; bottom: -20%; right: -10%; width: 500px; height: 500px;
+    background: radial-gradient(circle, rgba(168,85,247,.2) 0%, transparent 70%);
+    border-radius: 50%; animation: float2 10s ease-in-out infinite; pointer-events: none;
+}
+@keyframes float1 { 0%, 100% { transform: translate(0,0); } 50% { transform: translate(30px,20px); } }
+@keyframes float2 { 0%, 100% { transform: translate(0,0); } 50% { transform: translate(-20px,-30px); } }
+@keyframes cardIn { from { opacity:0; transform: translateY(20px) scale(.98); } to { opacity:1; transform: translateY(0) scale(1); } }
+.auth-container { position: relative; z-index: 10; width: 100%; max-width: 420px; padding: 1rem; }
+.auth-brand { text-align: center; margin-bottom: 2rem; }
+.auth-brand-icon {
+    width: 56px; height: 56px; border-radius: 16px;
+    background: linear-gradient(135deg, #6366f1, #8b5cf6);
+    display: inline-flex; align-items: center; justify-content: center;
+    font-size: 1.5rem; color: #fff; box-shadow: 0 8px 24px rgba(99,102,241,.4); margin-bottom: .75rem;
+}
+.auth-brand-title { font-size: 1.5rem; font-weight: 800; color: #fff; letter-spacing: -.5px; }
+.auth-brand-sub { font-size: .8rem; color: #94a3b8; margin-top: 2px; }
+.auth-card {
+    background: #fff; border-radius: 16px; padding: 2rem;
+    box-shadow: 0 20px 60px rgba(0,0,0,.3); animation: cardIn .5s ease;
+}
+.auth-card h1 { font-size: 1.3rem; font-weight: 800; color: #0f172a; margin-bottom: 1.5rem; display: flex; align-items: center; gap: 8px; }
+.auth-desc { font-size: .85rem; color: #64748b; line-height: 1.6; margin-bottom: 1.5rem; }
+.form-group { margin-bottom: 1.15rem; }
+.form-group label { display: block; font-size: .8rem; font-weight: 600; color: #64748b; margin-bottom: 6px; text-transform: uppercase; letter-spacing: .3px; }
+.form-group input { width: 100%; padding: 10px 14px; border: 1.5px solid #e2e8f0; border-radius: 8px; font-size: .9rem; font-family: inherit; color: #0f172a; transition: all .25s ease; }
+.form-group input:focus { outline: none; border-color: #6366f1; box-shadow: 0 0 0 3px rgba(99,102,241,.12); }
+.form-options { display: flex; justify-content: flex-end; margin-bottom: .25rem; }
+.forgot-link { font-size: .8rem; color: #6366f1; text-decoration: none; font-weight: 600; transition: color .2s; }
+.forgot-link:hover { color: #4f46e5; text-decoration: underline; }
+.btn-submit {
+    width: 100%; padding: 11px 20px; border: none; border-radius: 8px; font-size: .9rem; font-weight: 700;
+    font-family: inherit; background: linear-gradient(135deg, #6366f1, #8b5cf6); color: #fff;
+    cursor: pointer; transition: all .25s ease; box-shadow: 0 4px 14px rgba(99,102,241,.35); margin-top: .5rem;
+}
+.btn-submit:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(99,102,241,.45); }
+.auth-footer { text-align: center; margin-top: 1.25rem; font-size: .85rem; color: #64748b; }
+.auth-footer a { color: #6366f1; font-weight: 600; text-decoration: none; }
+.auth-footer a:hover { text-decoration: underline; }
+.alert-error { background: linear-gradient(135deg, #fef2f2, #fee2e2); color: #991b1b; border: 1px solid #fecaca; padding: 10px 14px; border-radius: 8px; font-size: .82rem; margin-bottom: 1rem; }
+.alert-error ul { list-style: none; }
+.alert-success { background: linear-gradient(135deg, #ecfdf5, #d1fae5); color: #065f46; border: 1px solid #a7f3d0; padding: 10px 14px; border-radius: 8px; font-size: .82rem; margin-bottom: 1rem; }

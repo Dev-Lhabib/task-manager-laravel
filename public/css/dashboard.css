@@ -1,0 +1,107 @@
+/* ── WELCOME HERO ────────────────────────────────────── */
+.welcome-hero {
+    background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #a855f7 100%);
+    border-radius: var(--radius); padding: 2rem 2.25rem; color: #fff;
+    position: relative; overflow: hidden; margin-bottom: 1.5rem;
+}
+.welcome-hero::before {
+    content: ''; position: absolute; top: -40%; right: -10%; width: 300px; height: 300px;
+    background: radial-gradient(circle, rgba(255,255,255,.12) 0%, transparent 70%); border-radius: 50%;
+}
+.welcome-hero::after {
+    content: ''; position: absolute; bottom: -60%; left: 20%; width: 250px; height: 250px;
+    background: radial-gradient(circle, rgba(255,255,255,.08) 0%, transparent 70%); border-radius: 50%;
+}
+.welcome-hero h1 { font-size: 1.65rem; font-weight: 800; margin-bottom: 6px; position: relative; z-index: 1; letter-spacing: -.4px; }
+.welcome-hero p { font-size: .95rem; opacity: .85; position: relative; z-index: 1; font-weight: 400; }
+.welcome-hero .hero-stats { display: flex; gap: 2rem; margin-top: 1.25rem; position: relative; z-index: 1; }
+.hero-stat { display: flex; flex-direction: column; }
+.hero-stat .hs-value { font-size: 1.75rem; font-weight: 800; }
+.hero-stat .hs-label { font-size: .75rem; opacity: .7; text-transform: uppercase; letter-spacing: .5px; font-weight: 600; }
+
+/* ── STAT CARDS ──────────────────────────────────────── */
+.stats-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 1rem; margin-bottom: 1.5rem; }
+.stat-card { padding: 1.25rem 1.5rem; position: relative; overflow: hidden; }
+.stat-card .stat-icon { width: 44px; height: 44px; border-radius: 10px; display: flex; align-items: center; justify-content: center; margin-bottom: .75rem; font-size: 1.2rem; }
+.stat-card .stat-value { font-size: 1.85rem; font-weight: 800; letter-spacing: -.5px; line-height: 1; margin-bottom: 4px; }
+.stat-card .stat-label { font-size: .8rem; color: var(--text-secondary); font-weight: 500; }
+.stat-card .stat-bar { position: absolute; bottom: 0; left: 0; right: 0; height: 3px; border-radius: 0 0 var(--radius) var(--radius); }
+.stat-total .stat-icon { background: #eef2ff; color: #6366f1; }
+.stat-total .stat-value { color: #6366f1; }
+.stat-total .stat-bar { background: linear-gradient(90deg, #6366f1, #818cf8); }
+.stat-todo .stat-icon { background: #dbeafe; color: #2563eb; }
+.stat-todo .stat-value { color: #2563eb; }
+.stat-todo .stat-bar { background: linear-gradient(90deg, #2563eb, #60a5fa); }
+.stat-progress .stat-icon { background: #fef3c7; color: #d97706; }
+.stat-progress .stat-value { color: #d97706; }
+.stat-progress .stat-bar { background: linear-gradient(90deg, #d97706, #fbbf24); }
+.stat-review .stat-icon { background: #ede9fe; color: #7c3aed; }
+.stat-review .stat-value { color: #7c3aed; }
+.stat-review .stat-bar { background: linear-gradient(90deg, #7c3aed, #a78bfa); }
+.stat-done .stat-icon { background: #d1fae5; color: #059669; }
+.stat-done .stat-value { color: #059669; }
+.stat-done .stat-bar { background: linear-gradient(90deg, #059669, #34d399); }
+
+/* ── CONTENT GRID ────────────────────────────────────── */
+.dash-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 1.5rem; margin-bottom: 1.5rem; }
+
+/* ── RECENT TASKS ────────────────────────────────────── */
+.section-card { padding: 1.5rem; }
+.section-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem; }
+.section-title { font-size: 1rem; font-weight: 700; color: var(--text-primary); display: flex; align-items: center; gap: 8px; }
+.section-title .icon { width: 28px; height: 28px; border-radius: 8px; background: #eef2ff; display: flex; align-items: center; justify-content: center; font-size: .85rem; }
+.section-link { font-size: .8rem; color: var(--accent); text-decoration: none; font-weight: 600; transition: color var(--transition); }
+.section-link:hover { color: var(--accent-dark); }
+.task-item { display: flex; align-items: center; gap: 14px; padding: 12px 14px; border-radius: var(--radius-sm); transition: background var(--transition); margin-bottom: 4px; }
+.task-item:hover { background: #f8fafc; }
+.task-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+.dot-todo { background: #2563eb; }
+.dot-in_progress { background: #d97706; }
+.dot-in_review { background: #7c3aed; }
+.dot-done { background: #059669; }
+.task-info { flex: 1; min-width: 0; }
+.task-name { font-size: .875rem; font-weight: 600; color: var(--text-primary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.task-meta { font-size: .75rem; color: var(--text-muted); margin-top: 1px; }
+.badge { font-size: .7rem; padding: 3px 10px; border-radius: 20px; font-weight: 600; white-space: nowrap; }
+.badge-todo { background: #dbeafe; color: #1e40af; }
+.badge-in_progress { background: #fef3c7; color: #92400e; }
+.badge-in_review { background: #ede9fe; color: #5b21b6; }
+.badge-done { background: #d1fae5; color: #065f46; }
+.empty-state { text-align: center; padding: 2rem 1rem; color: var(--text-muted); }
+.empty-state .empty-icon { font-size: 2.5rem; margin-bottom: .75rem; }
+
+/* ── PROGRESS RING ───────────────────────────────────── */
+.progress-section { display: flex; flex-direction: column; align-items: center; }
+.ring-container { position: relative; width: 140px; height: 140px; margin-bottom: 1rem; }
+.ring-container svg { transform: rotate(-90deg); }
+.ring-bg { fill: none; stroke: #e2e8f0; stroke-width: 10; }
+.ring-fill { fill: none; stroke: url(#ringGradient); stroke-width: 10; stroke-linecap: round; stroke-dasharray: 377; stroke-dashoffset: 377; transition: stroke-dashoffset 1.5s cubic-bezier(.4,0,.2,1); }
+.ring-text { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+.ring-percent { font-size: 2rem; font-weight: 800; color: var(--text-primary); line-height: 1; letter-spacing: -1px; }
+.ring-label { font-size: .7rem; color: var(--text-muted); font-weight: 500; text-transform: uppercase; letter-spacing: .5px; }
+.progress-legend { width: 100%; display: flex; flex-direction: column; gap: 8px; }
+.legend-item { display: flex; align-items: center; justify-content: space-between; font-size: .8rem; }
+.legend-left { display: flex; align-items: center; gap: 8px; }
+.legend-dot { width: 8px; height: 8px; border-radius: 50%; }
+.legend-name { color: var(--text-secondary); font-weight: 500; }
+.legend-value { font-weight: 700; color: var(--text-primary); }
+
+/* ── QUICK ACTIONS ───────────────────────────────────── */
+.quick-actions-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: .75rem; }
+.quick-action { display: flex; flex-direction: column; align-items: center; gap: 8px; padding: 1.25rem 1rem; border-radius: var(--radius); text-decoration: none; color: var(--text-primary); background: #f8fafc; border: 1px solid var(--border); transition: all var(--transition); font-size: .8rem; font-weight: 600; }
+.quick-action:hover { border-color: var(--accent); background: #eef2ff; transform: translateY(-2px); box-shadow: 0 4px 12px rgba(99,102,241,.15); }
+.quick-action .qa-icon { width: 36px; height: 36px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; }
+
+/* ── PROFILE CARD ────────────────────────────────────── */
+.profile-summary { display: flex; align-items: center; gap: 16px; padding-bottom: 1.25rem; border-bottom: 1px solid var(--border); margin-bottom: 1.25rem; }
+.profile-avatar-lg { width: 56px; height: 56px; border-radius: 14px; background: linear-gradient(135deg, #6366f1, #a855f7); display: flex; align-items: center; justify-content: center; color: #fff; font-weight: 800; font-size: 1.2rem; flex-shrink: 0; box-shadow: 0 4px 14px rgba(99,102,241,.3); }
+.profile-details { flex: 1; }
+.profile-name { font-size: 1rem; font-weight: 700; }
+.profile-email { font-size: .8rem; color: var(--text-muted); }
+.profile-stats-row { display: grid; grid-template-columns: repeat(2, 1fr); gap: .75rem; }
+.profile-stat-item { text-align: center; padding: .75rem; background: #f8fafc; border-radius: var(--radius-sm); }
+.profile-stat-item .psi-value { font-size: 1.1rem; font-weight: 800; color: var(--accent); }
+.profile-stat-item .psi-label { font-size: .7rem; color: var(--text-muted); font-weight: 500; }
+
+@media (max-width: 1024px) { .stats-grid { grid-template-columns: repeat(2, 1fr); } .dash-grid { grid-template-columns: 1fr; } }
+@media (max-width: 580px) { .stats-grid { grid-template-columns: 1fr; } .welcome-hero .hero-stats { flex-wrap: wrap; gap: 1rem; } }
