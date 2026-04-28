@@ -25,7 +25,8 @@
     <a href="{{ route('tasks.index') }}" class="brand">✅ Task Manager</a>
     <div class="nav-links">
         @auth
-            <span style="color:#fff;font-size:.9rem">{{ auth()->user()->name }}</span>
+            <span style="color:#fff;font-size:.9rem">{{ Auth::user()->name }}</span>
+            <a href="{{ route('dashboard') }}">Dashboard</a>
             <a href="{{ route('tasks.index') }}">Mes tâches</a>
             <a href="{{ route('tasks.create') }}">+ Nouvelle tâche</a>
             <form method="POST" action="{{ route('logout') }}">
