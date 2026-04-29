@@ -13,32 +13,31 @@ class DatabaseSeeder extends Seeder
     // Note : on utilise firstOrCreate pour éviter les doublons si on relance le seeder
     public function run(): void
     {
-        // 4 catégories
+        // 4 catégories fixes
         $categories = [
             'Développement',
             'Design',
             'Marketing',
             'DevOps',
         ];
-
         foreach ($categories as $name) {
             Category::firstOrCreate(['name' => $name]);
         }
+        // Ajoute 10 catégories aléatoires
+        \App\Models\Category::factory()->count(10)->create();
 
         // 2 utilisateurs
-        $alice = User::firstOrCreate([
-            'name'     => 'Alice Martin',
-            'email'    => 'alice@example.com',
-            'password' => Hash::make('password'),
-        ]);
+        $alice = User::firstOrCreate(
+            ['email' => 'alice@example.com'],
+            ['name' => 'Alice Martin', 'password' => Hash::make('password')]
+        );
 
-        $bob = User::firstOrCreate([
-            'name'     => 'Bob Dupont',
-            'email'    => 'bob@example.com',
-            'password' => Hash::make('password'),
-        ]);
+        $bob = User::firstOrCreate(
+            ['email' => 'bob@example.com'],
+            ['name' => 'Bob Dupont', 'password' => Hash::make('password')]
+        );
 
-        // 10 tâches — 6 pour Alice, 4 pour Bob
+        // 10 tâches fixes — 6 pour Alice, 4 pour Bob
         $tasks = [
             // Alice
             ['title' => 'Créer la page d\'accueil', 'description' => 'Design et intégration HTML/CSS', 'status' => 'done',        'category_id' => 1, 'user_id' => $alice->id],
@@ -64,5 +63,8 @@ class DatabaseSeeder extends Seeder
             ],
             $task);
         }
+
+        // Ajoute 50 tâches aléatoires
+        \App\Models\Task::factory()->count(50)->create();
     }
 }
