@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Task;
 use App\Models\Category;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth; 
+use Illuminate\Support\Facades\Auth;
 
 class TaskController extends Controller
 {
@@ -23,18 +23,10 @@ class TaskController extends Controller
 
         $categories = Category::all();
         return view('tasks.index', compact('tasks', 'categories'));
-    }
-
-    public function all(Request $request)
-    {
-        $tasks = Task::with(['category', 'user'])
-            ->when($request->status, fn($q, $v) => $q->where('status', $v))
-            ->when($request->category, fn($q, $v) => $q->where('category_id', $v))
-            ->latest()
-            ->get();
-
-        $categories = Category::all();
-        return view('tasks.all', compact('tasks', 'categories'));
+        // return view('tasks.index', [
+        //     'tasks' => $tasks,
+        //     'categories' => $categories
+        // ]);
     }
 
     public function create()

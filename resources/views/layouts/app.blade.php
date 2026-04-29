@@ -21,8 +21,8 @@
     <a href="{{ route('dashboard') }}" class="sidebar-brand">
         <div class="brand-icon">✦</div>
         <div>
-            <div class="brand-text">TaskFlow</div>
-            <div class="brand-sub">Manager Pro</div>
+            <div class="brand-text">TaskManager</div>
+            <div class="brand-sub">Manager Tasks</div>
         </div>
     </a>
 
@@ -45,12 +45,6 @@
                     <span class="nav-badge">{{ Auth::user()->tasks_count }}</span>
                 @endif
             @endauth
-        </a>
-        <a href="{{ route('tasks.all') }}" class="nav-item {{ request()->routeIs('tasks.all') ? 'active' : '' }}">
-            <span class="nav-icon">
-                <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-            </span>
-            Toutes les tâches
         </a>
         <a href="{{ route('tasks.create') }}" class="nav-item {{ request()->routeIs('tasks.create') ? 'active' : '' }}">
             <span class="nav-icon">
@@ -108,17 +102,6 @@
             <div class="alert alert-success">
                 <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="m9 12 2 2 4-4"/></svg>
                 {{ session('success') }}
-            </div>
-        @endif
-
-        @if($errors->any())
-            <div class="alert alert-error">
-                <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 8v4m0 4h.01"/></svg>
-                <ul>
-                    @foreach($errors->all() as $error)
-                        <li>{{ $error }}</li>
-                    @endforeach
-                </ul>
             </div>
         @endif
 
