@@ -16,6 +16,10 @@ return new class extends Migration
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->foreignId('category_id')->constrained()->onDelete('cascade');
             $table->timestamps();
+
+            // Un même utilisateur ne peut pas avoir deux tâches avec le même titre
+            $table->unique(['title', 'user_id']);
+
         });
     }
 

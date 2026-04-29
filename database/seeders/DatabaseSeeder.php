@@ -10,6 +10,7 @@ use App\Models\Task;
 
 class DatabaseSeeder extends Seeder
 {
+    // Note : on utilise firstOrCreate pour éviter les doublons si on relance le seeder
     public function run(): void
     {
         // 4 catégories
@@ -21,17 +22,17 @@ class DatabaseSeeder extends Seeder
         ];
 
         foreach ($categories as $name) {
-            Category::create(['name' => $name]);
+            Category::firstOrCreate(['name' => $name]);
         }
 
         // 2 utilisateurs
-        $alice = User::create([
+        $alice = User::firstOrCreate([
             'name'     => 'Alice Martin',
             'email'    => 'alice@example.com',
             'password' => Hash::make('password'),
         ]);
 
-        $bob = User::create([
+        $bob = User::firstOrCreate([
             'name'     => 'Bob Dupont',
             'email'    => 'bob@example.com',
             'password' => Hash::make('password'),
@@ -55,7 +56,13 @@ class DatabaseSeeder extends Seeder
         ];
 
         foreach ($tasks as $task) {
-            Task::create($task);
+            // On utilise firstOrCreate pour éviter les doublons si on relance le seeder
+            Task::firstOrCreate(
+                [
+                'title' => $task['title'],
+                'user_id' => $task['user_id']
+            ],
+            $task);
         }
     }
 }
