@@ -32,7 +32,7 @@
             <textarea id="description" name="description" class="form-textarea">{{ old('description', $task->description) }}</textarea>
         </div>
 
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:1rem;">
             <div class="form-group" style="margin-bottom:0;">
                 <label for="category_id" class="form-label">Catégorie *</label>
                 <select id="category_id" name="category_id" class="form-select" required>
@@ -54,6 +54,12 @@
                     <option value="in_review"   {{ old('status', $task->status) == 'in_review'   ? 'selected' : '' }}>En révision</option>
                     <option value="done"        {{ old('status', $task->status) == 'done'        ? 'selected' : '' }}>Terminé</option>
                 </select>
+            </div>
+
+            <div class="form-group" style="margin-bottom:0;">
+                <label for="due_date" class="form-label">Date d'échéance</label>
+                <input type="date" id="due_date" name="due_date" class="form-input"
+                    value="{{ old('due_date', $task->due_date?->format('Y-m-d')) }}">
             </div>
         </div>
 

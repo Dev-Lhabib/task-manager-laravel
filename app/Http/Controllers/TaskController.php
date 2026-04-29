@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Task;
 use App\Models\Category;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Auth; // ← ajoute cet import
 
 class TaskController extends Controller
 {
@@ -19,14 +19,18 @@ class TaskController extends Controller
             ->when($request->status, fn($q, $v) => $q->where('status', $v))
             ->when($request->category, fn($q, $v) => $q->where('category_id', $v))
             ->latest()
-            ->get();
+            ->paginate(10);
 
         $categories = Category::all();
         return view('tasks.index', compact('tasks', 'categories'));
-        // return view('tasks.index', [
-        //     'tasks' => $tasks,
-        //     'categories' => $categories
-        // ]);
+    }
+
+    public function show(Task $task)
+    {
+        if ($task->user_id !== Auth::id()) abort(403);
+
+        $task->load('category');
+        return view('tasks.show', compact('task'));
     }
 
     public function create()
@@ -42,6 +46,7 @@ class TaskController extends Controller
             'description' => 'nullable|string',
             'category_id' => 'required|exists:categories,id',
             'status'      => 'in:todo,in_progress,in_review,done',
+            'due_date'    => 'nullable|date',
         ]);
 
         $data['user_id'] = Auth::id(); // ← plus de warning
@@ -70,6 +75,7 @@ class TaskController extends Controller
             'description' => 'nullable|string',
             'category_id' => 'required|exists:categories,id',
             'status'      => 'required|in:todo,in_progress,in_review,done',
+            'due_date'    => 'nullable|date',
         ]);
 
         $task->update($data);
@@ -98,7 +104,7 @@ class TaskController extends Controller
 
         $task->update(['status' => $request->status]);
 
-        return redirect()->route('tasks.index')
+        return redirect()->back()
             ->with('success', 'Statut mis à jour.');
     }
 }

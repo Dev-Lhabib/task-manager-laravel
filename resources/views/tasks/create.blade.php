@@ -32,7 +32,7 @@
                 placeholder="Décrivez votre tâche en détail...">{{ old('description') }}</textarea>
         </div>
 
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:1rem;">
             <div class="form-group" style="margin-bottom:0;">
                 <label for="category_id" class="form-label">Catégorie *</label>
                 <select id="category_id" name="category_id" class="form-select" required>
@@ -53,6 +53,12 @@
                     <option value="in_review"   {{ old('status') == 'in_review'   ? 'selected' : '' }}>En révision</option>
                     <option value="done"        {{ old('status') == 'done'        ? 'selected' : '' }}>Terminé</option>
                 </select>
+            </div>
+
+            <div class="form-group" style="margin-bottom:0;">
+                <label for="due_date" class="form-label">Date d'échéance</label>
+                <input type="date" id="due_date" name="due_date" class="form-input"
+                    value="{{ old('due_date') }}">
             </div>
         </div>
 

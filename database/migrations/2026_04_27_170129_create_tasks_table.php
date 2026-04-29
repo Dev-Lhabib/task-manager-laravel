@@ -19,6 +19,7 @@ return new class extends Migration
 
             // Un même utilisateur ne peut pas avoir deux tâches avec le même titre
             $table->unique(['title', 'user_id']);
+            $table->date('due_date')->nullable()->after('status');
 
         });
     }

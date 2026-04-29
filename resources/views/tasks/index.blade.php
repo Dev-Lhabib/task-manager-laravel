@@ -12,7 +12,7 @@
     <h1>
         <svg width="24" height="24" fill="none" stroke="var(--accent)" stroke-width="2" viewBox="0 0 24 24"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/><path d="m9 14 2 2 4-4"/></svg>
         Mes tâches
-        <span class="task-count">{{ $tasks->count() }}</span>
+        <span class="task-count">{{ $tasks->total() }}</span>
     </h1>
     <a href="{{ route('tasks.create') }}" class="btn btn-accent">
         <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 8v8m-4-4h8"/></svg>
@@ -62,12 +62,20 @@
         style="--delay: {{ min($i * 0.05, 0.3) }}s">
             <div class="task-status-dot td-{{ $task->status }}"></div>
             <div class="task-main">
-                <div class="task-title">{{ $task->title }}</div>
-                <div class="task-subtitle">
-                    <span>{{ $task->category->name }}</span>
-                    <span class="sep">·</span>
-                    <span>{{ $task->created_at->format('d/m/Y') }}</span>
-                </div>
+                <a href="{{ route('tasks.show', $task) }}" class="task-link">
+                    <div class="task-title">{{ $task->title }}</div>
+                    <div class="task-subtitle">
+                        <span>{{ $task->category->name }}</span>
+                        <span class="sep">·</span>
+                        <span>{{ $task->created_at->format('d/m/Y') }}</span>
+                        @if($task->due_date)
+                            <span class="sep">·</span>
+                            <span class="{{ $task->due_date->isPast() && $task->status !== 'done' ? 'overdue-text' : '' }}">
+                                📅 {{ $task->due_date->format('d/m/Y') }}{{ $task->due_date->isPast() && $task->status !== 'done' ? ' (en retard)' : '' }}
+                            </span>
+                        @endif
+                    </div>
+                </a>
             </div>
             <span class="badge badge-{{ $task->status }}">
                 @if($task->status == 'todo') À faire
@@ -106,6 +114,13 @@
         </div>
         @endforeach
     </div>
+@endif
+
+{{-- Pagination --}}
+@if($tasks->hasPages())
+<div class="pagination-wrapper">
+    {{ $tasks->links() }}
+</div>
 @endif
 
 @endsection
