@@ -108,32 +108,50 @@
             </div>
         </div>
 
-        {{-- Quick Status Update --}}
-        <div class="glass-card show-quick-status animate-fadeup animate-fadeup-3">
-            <h2 class="show-section-title">
-                <span class="show-section-icon icon-amber">
-                    <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
-                </span>
-                Mise à jour rapide
-            </h2>
-            <form method="POST" action="{{ route('tasks.updateStatus', $task) }}" class="quick-status-form">
-                @csrf
-                @method('PATCH')
-                <div class="quick-status-options">
-                    @foreach($statusMap as $key => $info)
-                        <label class="quick-status-option {{ $task->status === $key ? 'quick-status-active' : '' }}">
-                            <input type="radio" name="status" value="{{ $key }}" {{ $task->status === $key ? 'checked' : '' }}>
-                            <span class="quick-status-dot qsd-{{ $key }}"></span>
-                            <span class="quick-status-text">{{ $info['icon'] }} {{ $info['label'] }}</span>
-                        </label>
-                    @endforeach
+        {{-- Quick Status Update / Reopen --}}
+        @if($task->status === 'done')
+            <div class="glass-card show-quick-status animate-fadeup animate-fadeup-3">
+                <div class="show-completed-banner">
+                    <div class="completed-icon">✅</div>
+                    <h3>Tâche terminée</h3>
+                    <p>Cette tâche a été marquée comme terminée. Vous pouvez toujours modifier les détails, mais le statut est verrouillé.</p>
+                    <form method="POST" action="{{ route('tasks.reopen', $task) }}">
+                        @csrf
+                        @method('PATCH')
+                        <button type="submit" class="btn btn-reopen">
+                            <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M1 4v6h6"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg>
+                            Réouvrir la tâche
+                        </button>
+                    </form>
                 </div>
-                <button type="submit" class="btn btn-accent quick-status-btn">
-                    <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
-                    Mettre à jour
-                </button>
-            </form>
-        </div>
+            </div>
+        @else
+            <div class="glass-card show-quick-status animate-fadeup animate-fadeup-3">
+                <h2 class="show-section-title">
+                    <span class="show-section-icon icon-amber">
+                        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+                    </span>
+                    Mise à jour rapide
+                </h2>
+                <form method="POST" action="{{ route('tasks.updateStatus', $task) }}" class="quick-status-form">
+                    @csrf
+                    @method('PATCH')
+                    <div class="quick-status-options">
+                        @foreach($statusMap as $key => $info)
+                            <label class="quick-status-option {{ $task->status === $key ? 'quick-status-active' : '' }}">
+                                <input type="radio" name="status" value="{{ $key }}" {{ $task->status === $key ? 'checked' : '' }}>
+                                <span class="quick-status-dot qsd-{{ $key }}"></span>
+                                <span class="quick-status-text">{{ $info['icon'] }} {{ $info['label'] }}</span>
+                            </label>
+                        @endforeach
+                    </div>
+                    <button type="submit" class="btn btn-accent quick-status-btn">
+                        <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+                        Mettre à jour
+                    </button>
+                </form>
+            </div>
+        @endif
     </div>
 
     {{-- Sidebar --}}
@@ -214,6 +232,17 @@
                 <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/></svg>
                 Actions
             </h3>
+
+            @if($task->status === 'done')
+                <form method="POST" action="{{ route('tasks.reopen', $task) }}">
+                    @csrf
+                    @method('PATCH')
+                    <button type="submit" class="show-action-btn show-action-reopen">
+                        <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M1 4v6h6"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg>
+                        Réouvrir la tâche
+                    </button>
+                </form>
+            @endif
 
             <a href="{{ route('tasks.edit', $task) }}" class="show-action-btn show-action-edit">
                 <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>

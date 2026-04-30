@@ -34,7 +34,7 @@
     <select name="category" class="filter-select">
         <option value="">Toutes les catégories</option>
         @foreach($categories as $cat)
-            <option value="{{ $cat->id }}" {{ request('category') == $cat->id ? 'selected' : '' }}>
+            <option value="{{ $cat->name }}" {{ request('category') == $cat->name ? 'selected' : '' }}>
                 {{ $cat->name }}
             </option>
         @endforeach
@@ -90,17 +90,28 @@
                     Modifier
                 </a>
 
-                <form method="POST" action="{{ route('tasks.updateStatus', $task) }}" class="status-mini">
-                    @csrf
-                    @method('PATCH')
-                    <select name="status">
-                        <option value="todo"        {{ $task->status == 'todo'        ? 'selected' : '' }}>À faire</option>
-                        <option value="in_progress" {{ $task->status == 'in_progress' ? 'selected' : '' }}>En cours</option>
-                        <option value="in_review"   {{ $task->status == 'in_review'   ? 'selected' : '' }}>En révision</option>
-                        <option value="done"        {{ $task->status == 'done'        ? 'selected' : '' }}>Terminé</option>
-                    </select>
-                    <button type="submit" title="Mettre à jour">✓</button>
-                </form>
+                @if($task->status === 'done')
+                    <form method="POST" action="{{ route('tasks.reopen', $task) }}" style="display:inline;">
+                        @csrf
+                        @method('PATCH')
+                        <button type="submit" class="action-btn reopen-btn" title="Réouvrir">
+                            <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M1 4v6h6"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg>
+                            Réouvrir
+                        </button>
+                    </form>
+                @else
+                    <form method="POST" action="{{ route('tasks.updateStatus', $task) }}" class="status-mini">
+                        @csrf
+                        @method('PATCH')
+                        <select name="status">
+                            <option value="todo"        {{ $task->status == 'todo'        ? 'selected' : '' }}>À faire</option>
+                            <option value="in_progress" {{ $task->status == 'in_progress' ? 'selected' : '' }}>En cours</option>
+                            <option value="in_review"   {{ $task->status == 'in_review'   ? 'selected' : '' }}>En révision</option>
+                            <option value="done"        {{ $task->status == 'done'        ? 'selected' : '' }}>Terminé</option>
+                        </select>
+                        <button type="submit" title="Mettre à jour">✓</button>
+                    </form>
+                @endif
 
                 <form method="POST" action="{{ route('tasks.destroy', $task) }}">
                     @csrf

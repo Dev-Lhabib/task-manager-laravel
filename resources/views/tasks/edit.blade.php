@@ -48,12 +48,20 @@
 
             <div class="form-group" style="margin-bottom:0;">
                 <label for="status" class="form-label">Statut</label>
-                <select id="status" name="status" class="form-select">
-                    <option value="todo"        {{ old('status', $task->status) == 'todo'        ? 'selected' : '' }}>À faire</option>
-                    <option value="in_progress" {{ old('status', $task->status) == 'in_progress' ? 'selected' : '' }}>En cours</option>
-                    <option value="in_review"   {{ old('status', $task->status) == 'in_review'   ? 'selected' : '' }}>En révision</option>
-                    <option value="done"        {{ old('status', $task->status) == 'done'        ? 'selected' : '' }}>Terminé</option>
-                </select>
+                @if($task->status === 'done')
+                    <select id="status" name="_status_display" class="form-select" disabled>
+                        <option selected>✅ Terminé</option>
+                    </select>
+                    <input type="hidden" name="status" value="done">
+                    <small style="color:var(--text-muted);font-size:.75rem;margin-top:4px;display:block;">Réouvrez la tâche pour changer le statut.</small>
+                @else
+                    <select id="status" name="status" class="form-select">
+                        <option value="todo"        {{ old('status', $task->status) == 'todo'        ? 'selected' : '' }}>À faire</option>
+                        <option value="in_progress" {{ old('status', $task->status) == 'in_progress' ? 'selected' : '' }}>En cours</option>
+                        <option value="in_review"   {{ old('status', $task->status) == 'in_review'   ? 'selected' : '' }}>En révision</option>
+                        <option value="done"        {{ old('status', $task->status) == 'done'        ? 'selected' : '' }}>Terminé</option>
+                    </select>
+                @endif
             </div>
 
             <div class="form-group" style="margin-bottom:0;">
