@@ -1,58 +1,189 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# 📋 Task Manager — Laravel
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Application de gestion de tâches développée avec **Laravel 13** et **PHP 8.3**, offrant une interface premium avec un système complet de CRUD, filtrage, et gestion de statuts.
 
-## About Laravel
+---
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## 🚀 Fonctionnalités
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+### Gestion des Tâches
+- **CRUD complet** : Créer, lire, modifier et supprimer des tâches
+- **Page de détail** : Vue détaillée avec hero banner, barre de progression, et sidebar
+- **Mise à jour rapide** : Changer le statut directement depuis la liste ou la page de détail
+- **Catégories** : Organiser les tâches par catégorie
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+### Système de Statuts
+| Statut | Description |
+|--------|-------------|
+| 📋 À faire | Tâche en attente |
+| ⚡ En cours | Tâche en cours de réalisation |
+| 🔍 En révision | Tâche en cours de vérification |
+| ✅ Terminé | Tâche complétée (statut verrouillé) |
 
-## Learning Laravel
+### Workflow Hybride (Tâches Terminées)
+- ✅ Modification du titre, description, catégorie → **toujours autorisée**
+- ❌ Changement de statut → **verrouillé** quand la tâche est terminée
+- 🔄 Bouton **"Réouvrir"** → remet la tâche en "À faire"
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+### Filtrage & Recherche
+- Filtrer par **statut** (À faire, En cours, En révision, Terminé)
+- Filtrer par **catégorie** (nom affiché dans l'URL au lieu de l'ID)
+- Pagination (10 tâches par page)
 
-In addition, [Laracasts](https://laracasts.com) contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+### Authentification
+- Inscription / Connexion / Déconnexion
+- Mot de passe oublié
+- Profil utilisateur modifiable
+- Chaque utilisateur ne voit que **ses propres tâches**
 
-You can also watch bite-sized lessons with real-world projects on [Laravel Learn](https://laravel.com/learn), where you will be guided through building a Laravel application from scratch while learning PHP fundamentals.
+### Interface Premium
+- Design glassmorphism avec sidebar fixe
+- Hero banner adaptatif selon le statut (couleur dynamique)
+- Barre de progression visuelle des étapes
+- Animations d'entrée (fade-up)
+- Badges de statut colorés
+- Countdown pour les dates d'échéance
+- Design responsive (mobile-friendly)
 
-## Agentic Development
+---
 
-Laravel's predictable structure and conventions make it ideal for AI coding agents like Claude Code, Cursor, and GitHub Copilot. Install [Laravel Boost](https://laravel.com/docs/ai) to supercharge your AI workflow:
+## 🛠️ Technologies
+
+| Technologie | Version |
+|-------------|---------|
+| PHP | 8.3 |
+| Laravel | 13.x |
+| MySQL | 8.x |
+| CSS | Vanilla (design system custom) |
+| Serveur | Laragon |
+
+---
+
+## ⚙️ Installation
+
+### Prérequis
+- PHP 8.3+
+- Composer
+- MySQL
+- Laragon (recommandé) ou un autre environnement local
+
+### Étapes
 
 ```bash
-composer require laravel/boost --dev
+# 1. Cloner le projet
+git clone https://github.com/Dev-Lhabib/task-manager-laravel.git
+cd task-manager-laravel
 
-php artisan boost:install
+# 2. Installer les dépendances
+composer install
+
+# 3. Configurer l'environnement
+cp .env.example .env
+php artisan key:generate
+
+# 4. Configurer la base de données dans .env
+# DB_DATABASE=task_manager
+# DB_USERNAME=root
+# DB_PASSWORD=
+
+# 5. Lancer les migrations et les seeders
+php artisan migrate --seed
+
+# 6. Démarrer le serveur
+php artisan serve
 ```
 
-Boost provides your agent 15+ tools and skills that help agents build Laravel applications while following best practices.
+L'application est accessible à : **http://127.0.0.1:8000**
 
-## Contributing
+---
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+## 📊 Modélisation de la Base de Données
 
-## Code of Conduct
+### MCD (Modèle Conceptuel de Données)
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+![MCD — Modèle Conceptuel de Données](docs/mcd.png)
 
-## Security Vulnerabilities
+### MLD (Modèle Logique de Données)
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+![MLD — Modèle Logique de Données](docs/mld.png)
 
-## License
+---
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+## 📁 Structure du Projet
+
+```
+app/
+├── Http/Controllers/
+│   ├── TaskController.php      # CRUD + updateStatus + reopen
+│   └── ProfileController.php   # Gestion du profil
+├── Models/
+│   ├── Task.php                # Modèle tâche (casts: due_date)
+│   ├── Category.php            # Modèle catégorie
+│   └── User.php                # Modèle utilisateur
+resources/views/
+├── layouts/app.blade.php       # Layout principal (sidebar + topbar)
+├── tasks/
+│   ├── index.blade.php         # Liste des tâches
+│   ├── show.blade.php          # Détail d'une tâche
+│   ├── create.blade.php        # Formulaire de création
+│   └── edit.blade.php          # Formulaire de modification
+├── dashboard.blade.php         # Tableau de bord
+└── auth/                       # Pages d'authentification
+public/css/
+├── app.css                     # Design system global
+└── tasks.css                   # Styles spécifiques aux tâches
+```
+
+---
+
+## 🔗 Routes API
+
+| Méthode | URI | Action | Description |
+|---------|-----|--------|-------------|
+| GET | `/tasks` | index | Liste des tâches |
+| GET | `/tasks/create` | create | Formulaire de création |
+| POST | `/tasks` | store | Enregistrer une tâche |
+| GET | `/tasks/{task}` | show | Détail d'une tâche |
+| GET | `/tasks/{task}/edit` | edit | Formulaire de modification |
+| PUT | `/tasks/{task}` | update | Mettre à jour une tâche |
+| DELETE | `/tasks/{task}` | destroy | Supprimer une tâche |
+| PATCH | `/tasks/{task}/status` | updateStatus | Mise à jour rapide du statut |
+| PATCH | `/tasks/{task}/reopen` | reopen | Réouvrir une tâche terminée |
+
+---
+
+## 🔒 Sécurité
+
+- Toutes les routes sont protégées par le middleware `auth`
+- Vérification `user_id === Auth::id()` sur chaque opération
+- Protection CSRF sur tous les formulaires
+- Validation des données côté serveur
+- Les tâches terminées ne peuvent pas changer de statut sans réouverture
+
+---
+
+## 🐛 Debugging avec Xdebug
+
+Le projet inclut une configuration VS Code prête à l'emploi :
+
+```bash
+# Fichier : .vscode/launch.json
+# Extension requise : PHP Debug (Xdebug)
+# Port : 9003
+```
+
+1. Activer Xdebug dans Laragon → Menu → PHP → Extensions → xdebug
+2. Dans VS Code : Ctrl+Shift+D → "Listen for Xdebug" → ▶ Play
+3. Placer un breakpoint et soumettre un formulaire
+
+---
+
+## 👤 Auteur
+
+**Lhabib** — [GitHub](https://github.com/Dev-Lhabib)
+
+---
+
+## 📄 Licence
+
+Ce projet est sous licence [MIT](LICENSE).
